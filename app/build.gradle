@@ -8,7 +8,7 @@ plugins {
 android {
     compileSdkVersion 30
     defaultConfig {
-        applicationId "geekbrains.ru.translator"
+        applicationId "dkaplin.translator"
         minSdkVersion 21
         targetSdkVersion 30
         versionCode 1
