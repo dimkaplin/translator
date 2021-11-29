@@ -1,13 +1,16 @@
 package dkaplin.translator.view.base
 
-import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import dkaplin.translator.model.data.AppState
-import dkaplin.translator.presenter.Presenter
+import dkaplin.translator.view.viewmodel.BaseViewModel
 
-abstract class BaseActivity<T : AppState> : AppCompatActivity(), View {
+abstract class BaseActivity<T : AppState> : AppCompatActivity() {
 
-    protected lateinit var presenter: Presenter<T, View>
+    abstract val model: BaseViewModel<T>
+
+    abstract fun renderData(appState: T)
+
+    /*protected lateinit var presenter: Presenter<T, View>
 
     protected abstract fun createPresenter(): Presenter<T, View>
 
@@ -26,5 +29,5 @@ abstract class BaseActivity<T : AppState> : AppCompatActivity(), View {
     override fun onStop() {
         super.onStop()
         presenter.detachView(this)
-    }
+    }*/
 }
