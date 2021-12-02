@@ -6,5 +6,5 @@ import io.reactivex.Observable
 class DataSourceRemote(private val remoteProvider: RetrofitImplementation = RetrofitImplementation()) :
     DataSource<List<WordModel>> {
 
-    override fun getData(word: String): Observable<List<WordModel>> = remoteProvider.getData(word)
+    override fun getData(word: String): List<WordModel> = remoteProvider.getData(word)
 }

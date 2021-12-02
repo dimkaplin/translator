@@ -17,9 +17,10 @@ import androidx.lifecycle.Observer
 import dagger.android.AndroidInjection
 import dkaplin.translator.databinding.ActivityMainBinding
 import javax.inject.Inject
+import dkaplin.translator.utils.network.isOnline
 
 
-class MainActivity : BaseActivity<AppState>() {
+class MainActivity : BaseActivity<AppState, MainInteractor>() {
 
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -43,7 +44,7 @@ class MainActivity : BaseActivity<AppState>() {
     }*/
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        AndroidInjection.inject(this)
+        //AndroidInjection.inject(this)
 
 
 
@@ -59,7 +60,13 @@ class MainActivity : BaseActivity<AppState>() {
             searchDialogFragment.setOnSearchClickListener(object :
                 SearchDialogFragment.OnSearchClickListener {
                 override fun onClick(searchWord: String) {
-                    model.getData(searchWord, true).observe(this@MainActivity, observer)
+                    //model.getData(searchWord, true).observe(this@MainActivity, observer)
+                    isNetworkAvailable = isOnline(applicationContext)
+                    if (isNetworkAvailable) {
+                        model.getData(searchWord, isNetworkAvailable)
+                    } else {
+                        showNoInternetConnectionDialog()
+                    }
                 }
             })
             searchDialogFragment.show(supportFragmentManager, BOTTOM_SHEET_FRAGMENT_DIALOG_TAG)
@@ -105,7 +112,7 @@ class MainActivity : BaseActivity<AppState>() {
         showViewError()
         binding.errorTextview.text = error ?: getString(R.string.undefined_error)
         binding.reloadButton.setOnClickListener {
-            model.getData("hi", true).observe(this, observer)
+            //model.getData("hi", true).observe(this, observer)
         }
     }
 
