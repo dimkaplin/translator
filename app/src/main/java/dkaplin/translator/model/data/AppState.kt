@@ -1,6 +1,5 @@
 package dkaplin.translator.model.data
 
-import io.reactivex.Observable
 
 sealed class AppState {
 

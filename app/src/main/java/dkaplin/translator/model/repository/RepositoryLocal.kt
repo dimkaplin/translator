@@ -1,9 +1,8 @@
-package dkaplin.translator.model.datasource
+package dkaplin.translator.model.repository
 
 import dkaplin.translator.model.data.AppState
 
-
-interface DataSourceLocal<T> : DataSource<T> {
+interface RepositoryLocal<T> : Repository<T> {
 
     suspend fun saveToDB(appState: AppState)
 }

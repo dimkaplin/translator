@@ -1,8 +1,7 @@
 package dkaplin.translator.model.repository
 
-import io.reactivex.Observable
 
 interface Repository<T> {
 
-    fun getData(word: String): T
+    suspend fun getData(word: String): T
 }
