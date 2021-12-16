@@ -22,6 +22,7 @@ private fun mapResult(
         is AppState.Success -> {
             getSuccessResultData(appState, isOnline, newSearchResults)
         }
+        else -> {}
     }
     return newSearchResults
 }
