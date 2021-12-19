@@ -3,6 +3,7 @@ package dkaplin.translator.view.base
 import android.os.Bundle
 import android.os.PersistableBundle
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import dkaplin.translator.model.data.AppState
 import dkaplin.translator.view.viewmodel.BaseViewModel
@@ -10,6 +11,7 @@ import dkaplin.translator.view.viewmodel.Interactor
 import dkaplin.translator.R
 import dkaplin.translator.databinding.LoadingLayoutBinding
 import dkaplin.translator.model.data.WordModel
+import dkaplin.translator.utils.network.OnlineLiveData
 import dkaplin.translator.utils.network.isOnline
 
 private const val DIALOG_FRAGMENT_TAG = "74a54328-5d62-46bf-ab6b-cbf5d8c79522"
@@ -18,12 +20,29 @@ abstract class BaseActivity<T : AppState, I : Interactor<T>> : AppCompatActivity
 
     private lateinit var binding: LoadingLayoutBinding
     abstract val model: BaseViewModel<T>
+    protected var isNetworkAvailable: Boolean = true
 
-    protected var isNetworkAvailable: Boolean = false
+
 
     override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
         super.onCreate(savedInstanceState, persistentState)
-        isNetworkAvailable = isOnline(applicationContext)
+        //isNetworkAvailable = isOnline(applicationContext)
+        subscribeToNetworkChange()
+    }
+
+    private fun subscribeToNetworkChange() {
+        OnlineLiveData(this).observe(
+            this@BaseActivity,
+            {
+                isNetworkAvailable = it
+                if (!isNetworkAvailable) {
+                    Toast.makeText(
+                        this@BaseActivity,
+                        R.string.dialog_message_device_is_offline,
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            })
     }
 
     override fun onResume() {
