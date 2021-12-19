@@ -9,10 +9,13 @@ import dkaplin.translator.model.repository.RepositoryImplementation
 import dkaplin.translator.model.repository.RepositoryImplementationLocal
 import dkaplin.translator.model.repository.RepositoryLocal
 import dkaplin.translator.room.HistoryDataBase
+import dkaplin.translator.view.history.HistoryActivity
 import dkaplin.translator.view.history.HistoryInteractor
 import dkaplin.translator.view.history.HistoryViewModel
+import dkaplin.translator.view.main.MainActivity
 import dkaplin.translator.view.main.MainInteractor
 import dkaplin.translator.view.main.MainViewModel
+import org.koin.android.viewmodel.dsl.viewModel
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
@@ -25,11 +28,15 @@ val application = module {
 }
 
 val mainScreen = module {
-    factory { MainViewModel(get()) }
-    factory { MainInteractor(get(), get()) }
+    scope(named<MainActivity>()) {
+        scoped { MainInteractor(get(), get()) }
+        viewModel { MainViewModel(get()) }
+    }
 }
 
 val historyScreen = module {
-    factory { HistoryViewModel(get()) }
-    factory { HistoryInteractor(get(), get()) }
+    scope(named<HistoryActivity>()) {
+        scoped { HistoryInteractor(get(), get()) }
+        viewModel { HistoryViewModel(get()) }
+    }
 }
