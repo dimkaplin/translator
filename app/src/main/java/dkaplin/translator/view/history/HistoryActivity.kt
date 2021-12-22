@@ -16,6 +16,8 @@ class HistoryActivity : BaseActivity<AppState, HistoryInteractor>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        //super.onCreate(savedInstanceState)
+
         binding = ActivityHistoryBinding.inflate(layoutInflater)
         setContentView(binding.root)
 

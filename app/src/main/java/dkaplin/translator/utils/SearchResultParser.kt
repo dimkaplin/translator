@@ -1,8 +1,7 @@
 package dkaplin.translator.utils
 
-import dkaplin.translator.model.data.AppState
-import dkaplin.translator.model.data.WordModel
-import dkaplin.translator.model.data.Meanings
+import dkaplin.model.data.dto.SearchResultDto
+import dkaplin.translator.model.data.*
 import dkaplin.translator.room.HistoryEntity
 
 fun parseOnlineSearchResults(appState: AppState): AppState {
@@ -45,21 +44,31 @@ private fun getSuccessResultData(
     }
 }
 
-private fun parseOnlineResult(dataModel: WordModel, newDataModels: ArrayList<WordModel>) {
-    if (!dataModel.text.isNullOrBlank() && !dataModel.meanings.isNullOrEmpty()) {
-        val newMeanings = arrayListOf<Meanings>()
-        for (meaning in dataModel.meanings) {
-            if (meaning.translation != null && !meaning.translation.translation.isNullOrBlank()) {
-                newMeanings.add(Meanings(meaning.translation, meaning.imageUrl))
+private fun parseOnlineResult(searchDataModel: WordModel, newSearchDataModels: ArrayList<WordModel>) {
+    if (searchDataModel.text.isNotBlank() && searchDataModel.meanings.isNotEmpty()) {
+        val newMeanings = arrayListOf<Meaning>()
+        for (meaning in searchDataModel.meanings) {
+            if (meaning.translatedMeaning.translatedMeaning.isBlank()) {
+                newMeanings.add(
+                    Meaning(
+                        meaning.translatedMeaning,
+                        meaning.imageUrl
+                    )
+                )
             }
         }
         if (newMeanings.isNotEmpty()) {
-            newDataModels.add(WordModel(dataModel.text, newMeanings))
+            newSearchDataModels.add(
+                WordModel(
+                    searchDataModel.text,
+                    newMeanings
+                )
+            )
         }
     }
 }
 
-fun mapHistoryEntityToSearchResult(list: List<HistoryEntity>): List<WordModel> {
+/*fun mapHistoryEntityToSearchResult(list: List<HistoryEntity>): List<WordModel> {
     val searchResult = ArrayList<WordModel>()
     if (!list.isNullOrEmpty()) {
         for (entity in list) {
@@ -67,7 +76,7 @@ fun mapHistoryEntityToSearchResult(list: List<HistoryEntity>): List<WordModel> {
         }
     }
     return searchResult
-}
+}*/
 
 fun convertDataModelSuccessToEntity(appState: AppState): HistoryEntity? {
     return when (appState) {
@@ -84,16 +93,40 @@ fun convertDataModelSuccessToEntity(appState: AppState): HistoryEntity? {
 }
 
 
+fun mapHistoryEntityToSearchResult(list: List<HistoryEntity>): List<SearchResultDto> {
+    val searchResult = ArrayList<SearchResultDto>()
+    if (!list.isNullOrEmpty()) {
+        for (entity in list) {
+            searchResult.add(SearchResultDto(entity.word, null))
+        }
+    }
+    return searchResult
+}
 
-
-fun convertMeaningsToString(meanings: List<Meanings>): String {
+fun convertMeaningsToSingleString(meanings: List<Meaning>): String {
     var meaningsSeparatedByComma = String()
     for ((index, meaning) in meanings.withIndex()) {
         meaningsSeparatedByComma += if (index + 1 != meanings.size) {
-            String.format("%s%s", meaning.translation?.translation, ", ")
+            String.format("%s%s", meaning.translatedMeaning.translatedMeaning, ", ")
         } else {
-            meaning.translation?.translation
+            meaning.translatedMeaning.translatedMeaning
         }
     }
     return meaningsSeparatedByComma
+}
+
+fun mapSearchResultToResult(searchResults: List<SearchResultDto>): List<WordModel> {
+    return searchResults.map { searchResult ->
+        var meanings: List<Meaning> = listOf()
+        searchResult.meanings?.let {
+            //Check for null for HistoryScreen
+            meanings = it.map { meaningsDto ->
+                Meaning(
+                    TranslatedMeaning(meaningsDto?.translation?.translation ?: ""),
+                    meaningsDto?.imageUrl ?: ""
+                )
+            }
+        }
+        WordModel(searchResult.text ?: "", meanings)
+    }
 }

@@ -7,6 +7,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import dkaplin.translator.R
 import dkaplin.translator.model.data.WordModel
+import dkaplin.translator.utils.convertMeaningsToSingleString
 
 class MainAdapter(private var onListItemClickListener: OnListItemClickListener) :
     RecyclerView.Adapter<MainAdapter.RecyclerItemViewHolder>() {
@@ -39,7 +40,8 @@ class MainAdapter(private var onListItemClickListener: OnListItemClickListener) 
             if (layoutPosition != RecyclerView.NO_POSITION) {
                 itemView.findViewById<TextView>(R.id.header_textview_recycler_item).text = data.text
                 itemView.findViewById<TextView>(R.id.description_textview_recycler_item).text =
-                    data.meanings?.get(0)?.translation?.translation
+                    //data.meanings?.get(0)?.translation?.translation
+                    convertMeaningsToSingleString(data.meanings)
                 itemView.setOnClickListener { openInNewWindow(data) }
             }
         }

@@ -14,7 +14,8 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import dkaplin.translator.databinding.ActivityMainBinding
-import dkaplin.translator.utils.convertMeaningsToString
+import dkaplin.translator.utils.convertMeaningsToSingleString
+//import dkaplin.translator.utils.convertMeaningsToString
 import dkaplin.translator.utils.network.isOnline
 import dkaplin.translator.utils.ui.viewById
 import dkaplin.translator.view.descriptionscreen.DescriptionActivity
@@ -45,7 +46,7 @@ class MainActivity : BaseActivity<AppState, MainInteractor>() {
                     DescriptionActivity.getIntent(
                         this@MainActivity,
                         data.text!!,
-                        convertMeaningsToString(data.meanings!!),
+                        convertMeaningsToSingleString(data.meanings),
                         data.meanings[0].imageUrl
                     )
                 )

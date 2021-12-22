@@ -2,6 +2,7 @@ package dkaplin.translator.model.datasource
 
 
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
+import dkaplin.model.data.dto.SearchResultDto
 import dkaplin.translator.model.data.WordModel
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -10,9 +11,9 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 
-class RetrofitImplementation : DataSource<List<WordModel>> {
+class RetrofitImplementation : DataSource<List<SearchResultDto>> {
 
-    override suspend fun getData(word: String): List<WordModel> {
+    override suspend fun getData(word: String): List<SearchResultDto> {
         return getService(BaseInterceptor.interceptor).searchAsync(word).await()
     }
 
