@@ -1,6 +1,7 @@
 package dkaplin.translator.di
 
 import androidx.room.Room
+import dkaplin.model.data.dto.SearchResultDto
 import dkaplin.translator.model.data.WordModel
 import dkaplin.translator.model.datasource.RetrofitImplementation
 import dkaplin.translator.model.datasource.RoomDataBaseImplementation
@@ -22,8 +23,9 @@ import org.koin.dsl.module
 val application = module {
     single { Room.databaseBuilder(get(), HistoryDataBase::class.java, "HistoryDB").build() }
     single { get<HistoryDataBase>().historyDao() }
-    single<Repository<List<WordModel>>> { RepositoryImplementation(RetrofitImplementation()) }
-    single<RepositoryLocal<List<WordModel>>> { RepositoryImplementationLocal(RoomDataBaseImplementation(get()))
+    single<Repository<List<SearchResultDto>>> { RepositoryImplementation(RetrofitImplementation()) }
+    single<RepositoryLocal<List<SearchResultDto>>> {
+        RepositoryImplementationLocal(RoomDataBaseImplementation(get()))
     }
 }
 
